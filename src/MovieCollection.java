@@ -53,14 +53,14 @@ public class MovieCollection {
         }
 
         int i = 1;
-        for (Movie m : titles){ //organize titles or use new arraylist
-            System.out.println(i + ". " + m.getTitle());
+        for (String s : insertionSort(titles, 1)){ //organize titles or use new arraylist
+            System.out.println(i + ". " + s);
             i++;
         }
     }
 
     private String searchCast(){
-
+        return "";
     }
 
     private ArrayList<String> insertionSort(ArrayList<Movie> list, int n){
