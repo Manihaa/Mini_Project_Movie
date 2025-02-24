@@ -41,13 +41,59 @@ public class MovieCollection {
 
     }
 
-    private String searchTitles(){
+    private void searchTitles(){
+        System.out.println("Please enter the title: ");
+        String title = scanner.nextLine().toLowerCase();
+        ArrayList<Movie> titles = new ArrayList<>();
 
+        for (Movie m : collection){
+            if (m.getTitle().toLowerCase().contains(title)){
+                titles.add(m);
+            }
+        }
+
+        int i = 1;
+        for (Movie m : titles){ //organize titles or use new arraylist
+            System.out.println(i + ". " + m.getTitle());
+            i++;
+        }
     }
 
     private String searchCast(){
 
     }
+
+    private ArrayList<String> insertionSort(ArrayList<Movie> list, int n){
+        ArrayList<String> words = new ArrayList<>();
+        String current;
+        int idx;
+        String temp;
+
+        if (n == 1){ //titles
+            for (Movie m : list){
+                words.add(m.getTitle());
+            }
+        }else { //cast
+            for (Movie m : list){
+                words.add(m.getCast());
+            }
+        }
+
+        for (int i = 1; i < words.size(); i++){
+            current = words.get(i);
+            idx = i;
+
+            while (idx > 0 && current.compareTo(words.get(idx - 1)) < 0){
+                temp = words.get(idx);
+                words.set(idx, words.get(idx - 1));
+                words.set(idx - 1, temp);
+                idx--;
+            }
+        }
+        return words;
+
+    }
+
 
     private String movieInfo(Movie m){
         String str = "Title: " + m.getTitle() +
