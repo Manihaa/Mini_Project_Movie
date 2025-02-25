@@ -42,9 +42,10 @@ public class MovieCollection {
     }
 
     private void searchTitles(){
-        System.out.println("Please enter the title: ");
+        System.out.print("Please enter the title: ");
         String title = scanner.nextLine().toLowerCase();
         ArrayList<Movie> titles = new ArrayList<>();
+        int choice;
 
         for (Movie m : collection){
             if (m.getTitle().toLowerCase().contains(title)){
@@ -52,31 +53,103 @@ public class MovieCollection {
             }
         }
 
-        int i = 1;
-        for (String s : insertionSort(titles, 1)){ //organize titles or use new arraylist
-            System.out.println(i + ". " + s);
-            i++;
+        ArrayList<String> organizedTitles = insertionSortTitles(titles);
+        if (organizedTitles.size() > 0){
+            int i = 1;
+            for (String s : organizedTitles){ //organize titles or use new arraylist
+                System.out.println(i + ". " + s);
+                i++;
+            }
+
+            System.out.print("\nWhich movie would you like to learn more about?\nEnter a number: ");
+            choice = scanner.nextInt();
+
+            for (Movie m : collection){
+                if (organizedTitles.get(choice-1).equals(m.getTitle())){
+                    System.out.println("\n" + movieInfo(m) + "\n");
+                }
+            }
+
+        }else{
+            System.out.println("No titles match that search term!");
         }
     }
 
-    private String searchCast(){
-        return "";
+    private void searchCast(){
+        System.out.print("Please enter a name: ");
+        String name = scanner.nextLine();
+        ArrayList<String> casts = new ArrayList<>();
+        ArrayList<Movie> movies = new ArrayList<>();
+        String[] actors;
+        boolean boo = true;
+        int choice;
+
+        for(Movie m : collection){
+            actors = m.getCast().split("\\|");
+
+            for (String a : actors){
+                if (a.toLowerCase().contains(name.toLowerCase())){
+
+                    for(String s : casts){
+                        if ((s.toLowerCase().equals(a.toLowerCase()))){
+                            boo = false;
+                        }
+                    }
+
+                    if (boo){
+                        casts.add(a);
+                    }
+                    boo = true;
+                }
+            }
+        }
+
+        ArrayList<String> organizedCast = insertionSortCast(casts);
+        if (organizedCast.size() > 0){
+            int i = 1;
+            for (String s : organizedCast){
+                System.out.println(i + ". " + s);
+                i++;
+            }
+
+            System.out.print("Which actor/actress's movies do you want to see?\nEnter a number: ");
+            choice = scanner.nextInt();
+
+            for (Movie m : collection){
+                if (m.getCast().contains(organizedCast.get(choice-1))){
+                    movies.add(m);
+                }
+            }
+
+            i = 1;
+            for(String s : insertionSortTitles(movies)){
+                System.out.println(i + ". " + s);
+                i++;
+            }
+
+            System.out.print("\nWhich movie would you like to learn more about?\nEnter a number: ");
+            choice = scanner.nextInt();
+
+            for (Movie m : collection){
+                if (insertionSortTitles(movies).get(choice-1).equals(m.getTitle())){
+                    System.out.println("\n" + movieInfo(m) + "\n");
+                }
+            }
+
+        }else{
+            System.out.println("No names match that search term!");
+        }
+
     }
 
-    private ArrayList<String> insertionSort(ArrayList<Movie> list, int n){
+    private ArrayList<String> insertionSortTitles(ArrayList<Movie> list){
         ArrayList<String> words = new ArrayList<>();
         String current;
         int idx;
         String temp;
 
-        if (n == 1){ //titles
-            for (Movie m : list){
-                words.add(m.getTitle());
-            }
-        }else { //cast
-            for (Movie m : list){
-                words.add(m.getCast());
-            }
+        for (Movie m : list){
+            words.add(m.getTitle());
         }
 
         for (int i = 1; i < words.size(); i++){
@@ -91,9 +164,26 @@ public class MovieCollection {
             }
         }
         return words;
-
     }
 
+    private ArrayList<String> insertionSortCast(ArrayList<String> list){
+        String current;
+        int idx;
+        String temp;
+
+        for (int i = 1; i < list.size(); i++){
+            current = list.get(i);
+            idx = i;
+
+            while (idx > 0 && current.compareTo(list.get(idx - 1)) < 0){
+                temp = list.get(idx);
+                list.set(idx, list.get(idx - 1));
+                list.set(idx - 1, temp);
+                idx--;
+            }
+        }
+        return list;
+    }
 
     private String movieInfo(Movie m){
         String str = "Title: " + m.getTitle() +
